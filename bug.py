@@ -65,7 +65,7 @@ def setbreak(line=None, file=None, cond=None, temp=0, frame=None, throw=False):
     elif not file.startswith("file:") and os.path.sep not in file:
         try:
             mod = __import__(file, globals(), locals(), ["__file__"])
-        except ImportError, err:
+        except ImportError as err:
             if throw:
                 raise
             sys.__stdout__.write("cannot set breakpoint: %s:%s : %s" %

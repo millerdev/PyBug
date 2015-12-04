@@ -1,5 +1,4 @@
-PyBug - python debugging utilities
-==================================
+# PyBug - python debugging utilities
 
 PyBug extends Python's interactive debugger (pdb), making it simpler to add
 breakpoints to your code.
@@ -24,3 +23,10 @@ module in the Python Standard Library:
 
   * Set a breakpoint in a module named by import path rather than file path.
 
+
+## Changes
+
+### 1.1
+
+- Fix `trace()` for proper readline support
+- Fix syntax error on Python 3
