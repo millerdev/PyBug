@@ -29,17 +29,13 @@ from pdb import Pdb
 class Error(Exception): pass
 
 def trace():
-    """like pdb.set_trace()
+    """like pdb.set_trace() except sets a breakpoint for the next line
     
     works with nose testing framework (uses sys.__stdout__ for output)
     """
     frame = sys._getframe().f_back
-    old_stdout = sys.stdout
     sys.stdout = sys.__stdout__
-    try:
-        Pdb().set_trace(frame)
-    finally:
-        sys.stdout = old_stdout
+    Pdb().set_trace(frame)
 
 def setbreak(line=None, file=None, cond=None, temp=0, frame=None, throw=False):
     """set a breakpoint or a given line in file with conditional
