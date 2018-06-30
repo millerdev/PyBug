@@ -1,18 +1,20 @@
 # PyBug - python debugging utilities
 
 PyBug extends Python's interactive debugger (pdb), making it simpler to add
-breakpoints to your code.
+breakpoints to your code. Uses ipdb if available.
 
 Usage examples:
 
-    # Like pdb.set_trace(), but shorter :) and works with nosetests.
-    import bug; bug.trace()
+```py
+# Like pdb.set_trace(), but shorter :) and works with nosetests.
+import bug; bug.trace()
 
-    # Set a breakpoint at line 35 of package.module
-    bug.setbreak(35, "package.module")
+# Set a breakpoint at line 35 of package.module
+bug.setbreak(35, "package.module")
 
-    # Set a conditional breakpoint at line 42 of /path/to/universe.py
-    bug.setbreak(42, "/path/to/universe.py", "name == 'hitchhiker'")
+# Set a conditional breakpoint at line 42 of /path/to/universe.py
+bug.setbreak(42, "/path/to/universe.py", "name == 'hitchhiker'")
+```
 
 There are two notable features here that would ideally make it into the pdb
 module in the Python Standard Library:
@@ -25,6 +27,10 @@ module in the Python Standard Library:
 
 
 ## Changes
+
+### 1.2
+
+- Use `ipdb` if available
 
 ### 1.1
 
