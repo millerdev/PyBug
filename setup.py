@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name='PyBug',
-    version='1.1',
+    version='1.2',
     author='Daniel Miller',
     author_email='millerdev@gmail.com',
     keywords='debug pdb extension',

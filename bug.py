@@ -24,18 +24,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import os
 import sys
-from pdb import Pdb
+try:
+    from ipdb import sset_trace
+    from ipdb.__main__ import _init_pdb
+    have_ipdb = True
+except ImportError:
+    from pdb import Pdb
+    have_ipdb = False
 
 class Error(Exception): pass
 
-def trace():
+def trace(context=3):
     """like pdb.set_trace() except sets a breakpoint for the next line
     
     works with nose testing framework (uses sys.__stdout__ for output)
     """
     frame = sys._getframe().f_back
-    sys.stdout = sys.__stdout__
-    Pdb().set_trace(frame)
+    if have_ipdb:
+        sset_trace(frame=frame, context=context)
+    else:
+        Pdb(stdout=sys.__stdout__).set_trace(frame)
 
 def setbreak(line=None, file=None, cond=None, temp=0, frame=None, throw=False):
     """set a breakpoint or a given line in file with conditional
@@ -71,7 +79,10 @@ def setbreak(line=None, file=None, cond=None, temp=0, frame=None, throw=False):
         sys.__stdout__.write("breaking in: %s" % file)
     if file.endswith(".pyc"):
         file = file[:-1]
-    pdb = Pdb(stdout=sys.__stdout__) # use sys.__stdout__ to work with nose tests
+    if have_ipdb:
+        pdb = _init_pdb(context=3)
+    else:
+        pdb = Pdb(stdout=sys.__stdout__) # use sys.__stdout__ to work with nose tests
     pdb.reset()
     pdb.curframe = frame
     while frame:
@@ -94,4 +105,16 @@ def setbreak(line=None, file=None, cond=None, temp=0, frame=None, throw=False):
     sys.__stdout__.write("\n")
     pdb.do_break("") # print breakpoints
     pdb.set_continue()
-    sys.settrace(pdb.trace_dispatch)
+    def trace_dispatch(*args, **kw):
+        try:
+            return pdb.trace_dispatch(*args, **kw)
+        except AttributeError:
+            # silence error on interpreter shutdown
+            # AttributeError: 'NoneType' object has no attribute 'abspath'
+            pass
+    sys.settrace(trace_dispatch)
+
+
+if __name__ == "__main__":
+    trace()
+    print("testing bug.py")
